@@ -7,6 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+// MONGO DB SETTINGS => LATER WE WILL ADD THESE TO EXTENSION METHODS
+
 builder.Services.Configure<DatabaseSettings>(
     builder.Configuration.GetSection("DatabaseSettings"));
 
@@ -32,8 +34,26 @@ builder.Services.AddScoped<IMongoCollection<Product>>(sp =>
     var client = sp.GetRequiredService<IMongoClient>();
     var settings = sp.GetRequiredService<IDatabaseSettings>();
     var database = client.GetDatabase(settings.DatabaseName);
-    return database.GetCollection<Product>(settings.ProductDetailCollectionName);
+    return database.GetCollection<Product>(settings.ProductCollectionName);
 });
+
+builder.Services.AddScoped<IMongoCollection<ProductDetail>>(sp =>
+{
+    var client = sp.GetRequiredService<IMongoClient>();
+    var settings = sp.GetRequiredService<IDatabaseSettings>();
+    var database = client.GetDatabase(settings.DatabaseName);
+    return database.GetCollection<ProductDetail>(settings.ProductDetailCollectionName);
+});
+
+builder.Services.AddScoped<IMongoCollection<ProductImage>>(sp =>
+{
+    var client = sp.GetRequiredService<IMongoClient>();
+    var settings = sp.GetRequiredService<IDatabaseSettings>();
+    var database = client.GetDatabase(settings.DatabaseName);
+    return database.GetCollection<ProductImage>(settings.ProductImageCollectionName);
+});
+
+// MONGO DB SETTINGS => LATER WE WILL ADD THESE TO EXTENSION METHODS
 
 
 builder.Services.AddControllers();
