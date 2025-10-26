@@ -9,29 +9,37 @@ namespace MultiShop.Catalog.Services.CategoryServices
         (IMongoCollection<Category> _categoryCollection , IMapper _mapper)
         : ICategoryService
     {
-        public Task CreateCategoryAsync(CreateCategoryDto createCategoryDto)
+        public async Task CreateCategoryAsync(CreateCategoryDto createCategoryDto)
         {
-            throw new NotImplementedException();
+            var value = _mapper.Map<Category>(createCategoryDto);
+
+            await _categoryCollection.InsertOneAsync(value);
         }
 
-        public Task DeleteCategoryAsync(string id)
+        public async Task DeleteCategoryAsync(string id)
         {
-            throw new NotImplementedException();
+            await _categoryCollection.DeleteOneAsync(q => q.CategoryId == id);
         }
 
-        public Task<List<ResultCategoryDto>> GetAllCategoryAsync()
+        public async Task<List<ResultCategoryDto>> GetAllCategoryAsync()
         {
-            throw new NotImplementedException();
+            var values = await _categoryCollection.Find(q => true).ToListAsync();
+
+            return _mapper.Map<List<ResultCategoryDto>>(values);
         }
 
-        public Task<GetByIdCategoryDto> GetByIdCategoryAsync(string id)
+        public async Task<GetByIdCategoryDto> GetByIdCategoryAsync(string id)
         {
-            throw new NotImplementedException();
+            var values = await _categoryCollection.Find(q => q.CategoryId == id).FirstOrDefaultAsync();
+
+            return _mapper.Map<GetByIdCategoryDto>(values);
         }
 
-        public Task UpdateCategoryAsync(UpdateCategoryDto updateCategoryDto)
+        public async Task UpdateCategoryAsync(UpdateCategoryDto updateCategoryDto)
         {
-            throw new NotImplementedException();
+            var values = _mapper.Map<Category>(updateCategoryDto);
+
+            await _categoryCollection.FindOneAndReplaceAsync(q => q.CategoryId == updateCategoryDto.CategoryId, values);
         }
     }
 }
