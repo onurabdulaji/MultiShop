@@ -1,6 +1,6 @@
 ﻿namespace MultiShop.Catalog.Dtos.ProductDetailDtos
 {
-    public class ResultProductDetailsDto
+    public class ResultProductDetailDto
     {
         public string ProductDetailId { get; set; }
         public string ProductDescription { get; set; }
