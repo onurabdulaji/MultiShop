@@ -27,6 +27,14 @@ builder.Services.AddScoped<IMongoCollection<Category>>(sp =>
     return database.GetCollection<Category>(settings.CategoryCollectionName);
 });
 
+builder.Services.AddScoped<IMongoCollection<Product>>(sp =>
+{
+    var client = sp.GetRequiredService<IMongoClient>();
+    var settings = sp.GetRequiredService<IDatabaseSettings>();
+    var database = client.GetDatabase(settings.DatabaseName);
+    return database.GetCollection<Product>(settings.ProductDetailCollectionName);
+});
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
