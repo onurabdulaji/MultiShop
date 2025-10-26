@@ -1,12 +1,12 @@
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using MultiShop.Catalog.Entities;
+using MultiShop.Catalog.Mapping;
 using MultiShop.Catalog.Services.CategoryServices;
 using MultiShop.Catalog.Services.ProductDetailServices;
 using MultiShop.Catalog.Services.ProductImageServices;
 using MultiShop.Catalog.Services.ProductServices;
 using MultiShop.Catalog.Settings;
-using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -65,7 +65,12 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IProductDetailService, ProductDetailService>();
 builder.Services.AddScoped<IProductImageService, ProductImageService>();
 
-builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+builder.Services.AddAutoMapper(config =>
+{
+    config.AddProfile<GeneralMapping>();
+    //config.AddMaps(typeof(GeneralMapping).Assembly);
+    //config.AddMaps(Assembly.GetExecutingAssembly());
+});
 
 
 builder.Services.AddControllers();
