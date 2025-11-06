@@ -1,0 +1,37 @@
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using MultiShop.IdentityServer.Dtos;
+using MultiShop.IdentityServer.Models;
+
+namespace MultiShop.IdentityServer.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class RegistersController
+        (UserManager<ApplicationUser> userManager)
+        : ControllerBase
+    {
+        [HttpPost]
+        public async Task<IActionResult> UserRegister(UserRegisterDto userRegisterDto)
+        {
+            var values = new ApplicationUser()
+            {
+                UserName = userRegisterDto.Username,
+                Email = userRegisterDto.Email,
+                Name = userRegisterDto.Name,
+                Surname = userRegisterDto.Surname,
+            };
+
+            var result = await userManager.CreateAsync(values,userRegisterDto.Password);
+
+            if (result.Succeeded)
+            {
+                return Ok("Kullanici Basariyla Eklendi");
+            }
+
+            // 💡 Hata detaylarını BadRequest ile döndürün
+            var errors = result.Errors.Select(e => e.Description);
+            return BadRequest(errors);
+        }
+    }
+}
