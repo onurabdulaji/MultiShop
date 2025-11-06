@@ -48,9 +48,9 @@ namespace MultiShop.IdentityServer
 
         public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
         {
-            builder.Services.AddRazorPages();
+            builder.Services.AddLocalApiAuthentication();
 
-            builder.Services.AddControllers();
+            builder.Services.AddRazorPages();
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -67,6 +67,8 @@ namespace MultiShop.IdentityServer
                     options.Events.RaiseFailureEvents = true;
                     options.Events.RaiseSuccessEvents = true;
 
+                    options.IssuerUri = "http://localhost:5001";
+
                     // Use a large chunk size for diagnostic data in development where it will be redirected to a local file.
                     if (builder.Environment.IsDevelopment())
                     {
@@ -74,8 +76,8 @@ namespace MultiShop.IdentityServer
                     }
                 })
                 .AddInMemoryIdentityResources(Config.IdentityResources)
-                .AddInMemoryApiResources(Config.ApiResources)
                 .AddInMemoryApiScopes(Config.ApiScopes)
+                .AddInMemoryApiResources(Config.ApiResources)
                 .AddInMemoryClients(Config.Clients)
                 .AddAspNetIdentity<ApplicationUser>()
                 .AddLicenseSummary();
@@ -116,10 +118,10 @@ namespace MultiShop.IdentityServer
             app.UseIdentityServer();
             app.UseAuthorization();
 
-            app.MapControllers();
-
             app.MapRazorPages()
                 .RequireAuthorization();
+
+            app.MapControllers();
 
             return app;
         }

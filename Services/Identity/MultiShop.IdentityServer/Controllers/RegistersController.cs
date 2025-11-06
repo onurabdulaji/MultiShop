@@ -1,37 +1,39 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MultiShop.IdentityServer.Dtos;
 using MultiShop.IdentityServer.Models;
+using static Duende.IdentityServer.IdentityServerConstants;
 
 namespace MultiShop.IdentityServer.Controllers
 {
+    [Authorize(LocalApi.PolicyName)]
     [Route("api/[controller]")]
     [ApiController]
-    public class RegistersController
-        (UserManager<ApplicationUser> userManager)
-        : ControllerBase
+    public class RegistersController(UserManager<ApplicationUser> _userManager) : ControllerBase
     {
         [HttpPost]
         public async Task<IActionResult> UserRegister(UserRegisterDto userRegisterDto)
         {
             var values = new ApplicationUser()
             {
-                UserName = userRegisterDto.Username,
-                Email = userRegisterDto.Email,
+                UserName = userRegisterDto.UserName,
                 Name = userRegisterDto.Name,
                 Surname = userRegisterDto.Surname,
+                Email = userRegisterDto.Email,
             };
 
-            var result = await userManager.CreateAsync(values,userRegisterDto.Password);
+            var result = await _userManager.CreateAsync(values, userRegisterDto.Password);
 
             if (result.Succeeded)
             {
-                return Ok("Kullanici Basariyla Eklendi");
+                return Ok("Kullanici Eklendi");
             }
-
-            // 💡 Hata detaylarını BadRequest ile döndürün
-            var errors = result.Errors.Select(e => e.Description);
-            return BadRequest(errors);
+            else
+            {
+                return BadRequest(result.Errors);
+            }
         }
     }
 }
