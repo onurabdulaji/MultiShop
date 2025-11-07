@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MultiShop.Order.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class Migration1 : Migration
+    public partial class OrderDbMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

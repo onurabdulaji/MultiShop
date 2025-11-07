@@ -12,8 +12,8 @@ using MultiShop.Order.Persistence.Context;
 namespace MultiShop.Order.Persistence.Migrations
 {
     [DbContext(typeof(OrderContext))]
-    [Migration("20251105191725_Migration1")]
-    partial class Migration1
+    [Migration("20251106234759_OrderDbMigration")]
+    partial class OrderDbMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

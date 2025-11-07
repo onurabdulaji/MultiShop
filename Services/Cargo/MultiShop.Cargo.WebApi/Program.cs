@@ -1,6 +1,35 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using MultiShop.Cargo.BussinesLayer.Abstract;
+using MultiShop.Cargo.BussinesLayer.Concrete;
+using MultiShop.Cargo.DataAccessLayer.Abstract;
+using MultiShop.Cargo.DataAccessLayer.Concrete;
+using MultiShop.Cargo.DataAccessLayer.EntityFramework;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+{
+    options.Authority = builder.Configuration["IdentityServerUrl"];
+    options.Audience = "ResourceCargo";
+    options.RequireHttpsMetadata = false;
+});
+
+builder.Services.AddDbContext<CargoContext>();
+
+builder.Services.AddScoped<ICargoCompanyDal, EfCargoCompanyDal>();
+builder.Services.AddScoped<ICargoCompanyService, CargoCompanyManager>();
+
+builder.Services.AddScoped<ICargoCustomerDal, EfCargoCustomerDal>();
+builder.Services.AddScoped<ICargoCustomerService, CargoCustomerManager>();
+
+builder.Services.AddScoped<ICargoDetailDal, EfCargoDetailDal>();
+builder.Services.AddScoped<ICargoDetailService, CargoDetailManager>();
+
+builder.Services.AddScoped<ICargoOperationDal, EfCargoOperationDal>();
+builder.Services.AddScoped<ICargoOperationService, CargoOperatonManager>();
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -17,6 +46,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
