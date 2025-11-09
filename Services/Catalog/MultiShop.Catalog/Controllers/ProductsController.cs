@@ -52,5 +52,12 @@ namespace MultiShop.Catalog.Controllers
 
             return Ok("Urun Guncellendi");
         }
+
+        [HttpGet("ProductListWithCategory")]
+        public async Task<IActionResult> ProductListWithCategory()
+        {
+            var values = await _productService.GetProductsWithCategoryAsync();
+            return Ok(values);
+        }
     }
 }

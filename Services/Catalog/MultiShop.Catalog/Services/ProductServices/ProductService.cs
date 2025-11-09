@@ -6,7 +6,7 @@ using MultiShop.Catalog.Entities;
 namespace MultiShop.Catalog.Services.ProductServices
 {
     public class ProductService
-        (IMapper _mapper , IMongoCollection<Product> _productCollection)
+        (IMapper _mapper , IMongoCollection<Product> _productCollection , IMongoCollection<Category> _categoryCollection)
         : IProductService
     {
         public async Task CreateProductAsync(CreateProductDto createProductDto)
@@ -40,6 +40,16 @@ namespace MultiShop.Catalog.Services.ProductServices
             var values = _mapper.Map<Product>(updateProductDto);
 
             await _productCollection.FindOneAndReplaceAsync(q => q.ProductId == updateProductDto.ProductId, values);
+        }
+        public async Task<List<ResultProductsWithCategoryDto>> GetProductsWithCategoryAsync()
+        {
+            var values = await _productCollection.Find(q => true).ToListAsync();
+
+            foreach (var item in values)
+            {
+                item.Category = await _categoryCollection.Find<Category>(q=>q.CategoryId == item.CategoryId).FirstAsync();
+            }
+            return _mapper.Map<List<ResultProductsWithCategoryDto>>(values);
         }
     }
 }
