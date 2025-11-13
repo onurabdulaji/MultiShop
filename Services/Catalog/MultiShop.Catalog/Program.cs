@@ -8,6 +8,7 @@ using MultiShop.Catalog.Services.FeatureSliderServices;
 using MultiShop.Catalog.Services.ProductDetailServices;
 using MultiShop.Catalog.Services.ProductImageServices;
 using MultiShop.Catalog.Services.ProductServices;
+using MultiShop.Catalog.Services.SpecialOfferServices;
 using MultiShop.Catalog.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -90,6 +91,14 @@ builder.Services.AddScoped<IMongoCollection<FeatureSlider>>(sp =>
     return database.GetCollection<FeatureSlider>(settings.FeatureSliderCollectionName);
 });
 
+builder.Services.AddScoped<IMongoCollection<SpecialOffer>>(sp =>
+{
+    var client = sp.GetRequiredService<IMongoClient>();
+    var settings = sp.GetRequiredService<IDatabaseSettings>();
+    var database = client.GetDatabase(settings.DatabaseName);
+    return database.GetCollection<SpecialOffer>(settings.SpecialOfferCollectionName);
+});
+
 // MONGO DB SETTINGS => LATER WE WILL ADD THESE TO EXTENSION METHODS
 
 builder.Services.AddScoped<ICategoryService, CategoryService>();
@@ -97,6 +106,7 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IProductDetailService, ProductDetailService>();
 builder.Services.AddScoped<IProductImageService, ProductImageService>();
 builder.Services.AddScoped<IFeatureSliderService, FeatureSliderService>();
+builder.Services.AddScoped<ISpecialOfferService, SpecialOfferService>();
 
 builder.Services.AddAutoMapper(config =>
 {
