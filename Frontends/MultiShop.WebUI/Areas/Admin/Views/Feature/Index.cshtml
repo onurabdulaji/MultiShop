@@ -1,4 +1,4 @@
-﻿@model List<ResultCategoryDto>
+﻿@model List<ResultFeatureDto>
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Areas/Admin/Views/AdminLayout/Index.cshtml";
@@ -20,19 +20,19 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach(var item in Model)
+                            @foreach (var item in Model)
                             {
                                 count++;
                                 <tr>
                                     <th scope="row">@count</th>
-                                    <td>@item.CategoryName</td>
-                                    <td><a href="/Admin/Category/DeleteCategory/@item.CategoryId" class="btn btn-danger">Sil</a></td>
-                                    <td><a href="/Admin/Category/UpdateCategory/@item.CategoryId" class="btn btn-success">Guncelle</a></td>
+                                    <td>@item.Title</td>
+                                    <td><a href="/Admin/Feature/DeleteFeature/@item.FeatureId" class="btn btn-danger">Sil</a></td>
+                                    <td><a href="/Admin/Feature/UpdateFeature/@item.FeatureId" class="btn btn-success">Guncelle</a></td>
                                 </tr>
                             }
                         </tbody>
                     </table>
-                    <a href="/Admin/Category/CreateCategory/" class="btn btn-primary">Yeni Kategori Girisi</a>
+                    <a href="/Admin/Feature/CreateFeature/" class="btn btn-primary">Yeni One Cikan Girisi</a>
                 </div>
             </div>
         </div>
