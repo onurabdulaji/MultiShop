@@ -6,6 +6,7 @@ using MultiShop.Catalog.Mapping;
 using MultiShop.Catalog.Services.CategoryServices;
 using MultiShop.Catalog.Services.FeatureService;
 using MultiShop.Catalog.Services.FeatureSliderServices;
+using MultiShop.Catalog.Services.OfferDiscountServices;
 using MultiShop.Catalog.Services.ProductDetailServices;
 using MultiShop.Catalog.Services.ProductImageServices;
 using MultiShop.Catalog.Services.ProductServices;
@@ -108,6 +109,14 @@ builder.Services.AddScoped<IMongoCollection<Feature>>(sp =>
     return database.GetCollection<Feature>(settings.FeatureCollectionName);
 });
 
+builder.Services.AddScoped<IMongoCollection<OfferDiscount>>(sp =>
+{
+    var client = sp.GetRequiredService<IMongoClient>();
+    var settings = sp.GetRequiredService<IDatabaseSettings>();
+    var database = client.GetDatabase(settings.DatabaseName);
+    return database.GetCollection<OfferDiscount>(settings.OfferDiscountCollectionName);
+});
+
 
 // MONGO DB SETTINGS => LATER WE WILL ADD THESE TO EXTENSION METHODS
 
@@ -118,6 +127,7 @@ builder.Services.AddScoped<IProductImageService, ProductImageService>();
 builder.Services.AddScoped<IFeatureSliderService, FeatureSliderService>();
 builder.Services.AddScoped<ISpecialOfferService, SpecialOfferService>();
 builder.Services.AddScoped<IFeatureService, FeatureService>();
+builder.Services.AddScoped<IOfferDiscountService, OfferDiscountService>();
 
 builder.Services.AddAutoMapper(config =>
 {
